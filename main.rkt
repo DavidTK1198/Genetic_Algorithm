@@ -27,24 +27,27 @@
   (lambda (x C)
     (= x (cadr C) )
     ))
+
 (define (random_L n k L);Creamos una lista con valores auxiliares
    (if (not (= (length L)n));la cual nos ayudara a representar
         (random_L n k (cons (random 1 (+ k 1)) L));los diferentes valores que pueden ser tomados
             L))   ;basados en el problema de la mochila
           ;los cuales se utilizan como un wrapper para los valores posibles basado en la lista recibida por el usuario
 
+(define (addition L)
+     (list (car L) (foldl + 0 (car L))))
+
 (define (genome L1 L2 L3)
   (if (empty? L1)
-      L3
+     (map addition L3)
       (genome (cdr L1) (cdr L2) (addx (car L2) (car L1) L3 f))))
       
-  
 
-;(define (population n size count k L);Creamos una población,"iterando" hasta llegar
- ;   (if (not (= size count));a la cantidad digitada por el usuario
-  ;      (cons (genome n k L) (population n size (+ count 1) k L))
-        ;L
-  ;))
+(define (population size count k L L2);Creamos una población,"iterando" hasta llegar
+    (if (not (= size count));a la cantidad digitada por el usuario
+        (cons (genome L2 (random_L (length L2) k '()) '() ) (population size (+ count 1) k L L2))
+        L
+  ))
 ;(addx 1 2 '() f)
 ;(addx 2 3 '( ((2) 1) ) f)
 ;(addx 2 6 '( ((2) 1) ((3) 2) ) f)
@@ -54,10 +57,9 @@
 ;(addx (genome 6 5 '()) 2 '(((1) 1)) f)
 ;(addx (genome 6 5 '()) 2 '(((1) 1) ((2) 2)) f)
 ;(define (fitness genome L2)0)
-(define (convert)0)
+;(addition '((7 8 11) 1) )
 ;(genome 6 3 '())
-
-;(population 7 6 0  4 '())
+ (car (population 500 0  4 '() '(1 2 3 5 7 7 8)))
 
 
 
