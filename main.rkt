@@ -7,48 +7,52 @@
 ;
 ; -----------------------------------------------
 ; EIF400 Paradigmas de Programación
-; 2do ciclo 2021, grupo 03(8pm)
+; 2do ciclo 2021, grupo 02(8pm)
 ; Proyecto 1
 ;
 ; 117250610 Barrientos Araya, Daniel
 ;
 ; ===============================================
 ;
-(define (delete  L)
-  (filter(lambda (x) (= x 1))L));Eliminamos los números 0 de la lista
-
-
-(define f
-  (lambda (L n)
-     (if (not (= (length (car L)) n));comprobamos que la sublista binaria de cada subgrupo
-       #t #f)                        ;posean el tamaño adecuado
-    ))
-
-       
-(define addx ;función encargada de añadir o crear una lista con sublistas
-  (lambda (x C f? n );basado en cierto criterio determinado por la función f
-    (cond ((empty? C);en este caso f nos indica si cada sublista posee
-           (list (list x)));la longitud adecuada basado en la lista de
-          ((f? C n);números "reales"
-          (cons (append (car C) (list x)) (cdr C)))
+(define addx
+  (lambda (r x C f?)
+    (cond ((empty? C)
+           (list (list (list x) r)))
+          ((f? r (car C))
+           (cons (list(append (caar C) (list x)) (cadr(car C))) (cdr C)))
           (else
-           (cons (car C) (addx x (cdr C) f?  n)))
+           (cons (car C) (addx r x (cdr C) f?)))
           )))
+(define f
+  (lambda (x C)
+    (= x (cadr C) )
+    ))
+(define (genome n k L);Creamos una lista con valores auxiliares
+   (if (not (= (length L)n));la cual nos ayudara a representar
+        (genome n k (cons (random 1 (+ k 1)) L));los diferentes valores que pueden ser tomados
+            L))   ;basados en el problema de la mochila
+          ;los cuales se utilizan como un wrapper para los valores posibles basado en la lista recibida por el usuario
 
 
-(define (genome n k L);Creamos una sublista con valores binarios
-   (if (not (= (length L)k));la cual nos ayudara a representar
-       (genome n k (addx (random 0 2) L f n ));los diferentes valores que pueden ser representados
-       (if (not (=(length (last L))n));basados en el problema de la mochila
-          (genome n k (addx (random 0 2) L f n ));se agrupa un individuo el cual posee sublistas con 0 y 1
-       L))) ;los cuales se utilizan como un wrapper para los valores posibles basado en la lista recibida por el usuario
+;(define (population n size count k L);Creamos una población,"iterando" hasta llegar
+ ;   (if (not (= size count));a la cantidad digitada por el usuario
+  ;      (cons (genome n k L) (population n size (+ count 1) k L))
+        ;L
+  ;))
+;(addx 1 2 '() f)
+;(addx 2 3 '( ((2) 1) ) f)
+(addx 2 6 '( ((2) 1) ((3) 2) ) f)
+(addx 3 8 '(((2) 1) ((3 6) 2))  f)
+(addx 3 4 '(((2) 1) ((3 6) 2) ((8) 3))  f)
+;(addx (genome 6 5 '()) 1 '() f )
+;(addx (genome 6 5 '()) 2 '(((1) 1)) f)
+;(addx (genome 6 5 '()) 2 '(((1) 1) ((2) 2)) f)
+;(define (fitness genome L2)0)
+(define (convert)0)
+;(genome 6 3 '())
+
+;(population 7 6 0  4 '())
 
 
-(define (population  size count n k L);Creamos una población,"iterando" hasta llegar
-    (if (not (= size count));a la cantidad digitada por el usuario
-        (cons (genome n k L) (population size (+ count 1) n k L))
-        L
-  ))
-(population 7 0 5 4 '())
 
   
