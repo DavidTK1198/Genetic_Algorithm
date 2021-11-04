@@ -42,31 +42,24 @@
       (transform (cdr L1) (cdr L2) (addx (car L2) (car L1) L3 f))))
 
 (define (low_fitness x y)
-   (< x y) )
+   (< (last  x) (last y)))
 
 
 (define (delete L)
-  (filter(lambda (x) (not(< x 0)))L))
+    (filter(lambda (x) (> (last x) -1))L))
 ;------------------------------------------------------------------------------------
 
 (define (genome L L2 k)
    (if (not (= (length L2) (length L)))
         (genome L (cons (random 1 (+ k 1)) L2)k)
-            (list L2 L)))  
-          
-
-
-      
+            (list L2 L k)))  
+         
 
 (define (population size count k L);Creamos una población,"iterando" hasta llegar
     (if (not (= size count));a la cantidad digitada por el usuario
         (cons (genome L '() k) (population size (+ count 1) k L))
-        L
+        '()
   ))
-
-
-
-
 
 (define (fitness-x L mean)
          (if (empty? L)
@@ -75,19 +68,20 @@
        )
   )
   
-  (define (fitness L L2 k)
-      (if (not(=(length (transform L  L2 '() ))k))
-          -1
-       (fitness-x (transform L  L2 '() ) (/ 33 4.))))
+  (define (fitness L)
+      (if (not(= (length (transform (cadr L) (car L) '() )) (caddr L) ))
+          (append L (list -1) )
+      (append L (list (fitness-x (transform (cadr L)  (car L) '() ) (/ (apply + (car L)) (caddr L)))))
+      ))
 
-(define (select-pair population L k)
-  0)
-  
 
-         
+      
 ;(genome '(1 2 4 5 6 7 8) '() 4)
 
-(car(population  20 0 4 '(1 2 4 5 6 7 8)))
+(define (select-pair population)
+  (delete (sort (map fitness population) low_fitness)))
+
+(select-pair (population  30 0 4 '(1 2 4 5 6 7 8)))
 
 
   
