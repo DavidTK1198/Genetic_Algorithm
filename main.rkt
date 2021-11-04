@@ -14,6 +14,11 @@
 ;
 ; ===============================================
 ;
+
+ (define (substract lst x);No utilizada
+  (map (lambda (n) (abs(- x n))) lst))
+
+;Funciones de apoyo
 (define addx
   (lambda (r x C f?)
     (cond ((empty? C)
@@ -28,12 +33,6 @@
     (= x (cadr C) )
     ))
 
-(define (genome n k L);Creamos una lista con valores auxiliares
-   (if (not (= (length L)n));la cual nos ayudara a representar
-        (genome n k (cons (random 1 (+ k 1)) L));los diferentes valores que pueden ser tomados
-            L))   ;basados en el problema de la mochila
-          ;los cuales se utilizan como un wrapper para los valores posibles basado en la lista recibida por el usuario
-
 (define (addition L)
      (list (car L) (foldl + 0 (car L))))
 
@@ -41,43 +40,54 @@
   (if (empty? L1)
      (map addition L3)
       (transform (cdr L1) (cdr L2) (addx (car L2) (car L1) L3 f))))
+
+(define (low_fitness x y)
+   (< x y) )
+
+
+(define (delete L)
+  (filter(lambda (x) (not(< x 0)))L))
+;------------------------------------------------------------------------------------
+
+(define (genome L L2 k)
+   (if (not (= (length L2) (length L)))
+        (genome L (cons (random 1 (+ k 1)) L2)k)
+            (list L2 L)))  
+          
+
+
       
 
-(define (population size count k L L2);Creamos una población,"iterando" hasta llegar
+(define (population size count k L);Creamos una población,"iterando" hasta llegar
     (if (not (= size count));a la cantidad digitada por el usuario
-        (cons (genome (length L2) k '())  (population size (+ count 1) k L L2))
+        (cons (genome L '() k) (population size (+ count 1) k L))
         L
   ))
 
 
- (define (substract lst x)
-  (map (lambda (n) (abs(- x n))) lst))
+
 
 
 (define (fitness-x L mean)
          (if (empty? L)
              0
-       (expt (+ (apply + (substract (caar L) mean)) (fitness-x (cdr L) mean)) 2)
+        (+ (expt (abs(- (cadr (car L)) mean))2) (fitness-x (cdr L) mean))
        )
   )
   
-  (define (fitness L k)
-       (if (not(=(transform L) k))
+  (define (fitness L L2 k)
+      (if (not(=(length (transform L  L2 '() ))k))
+          -1
+       (fitness-x (transform L  L2 '() ) (/ 33 4.))))
+
+(define (select-pair population L k)
+  0)
+  
 
          
-;(addx 1 2 '() f)
-;(addx 2 3 '( ((2) 1) ) f)
-;(addx 2 6 '( ((2) 1) ((3) 2) ) f)
-;(addx 3 8 '(((2) 1) ((3 6) 2))  f)
-;(addx 3 4 '(((2) 1) ((3 6) 2) ((8) 3))  f)
-;(genome '(5 6 7 8 9 11) (random_L (length '(5 6 7 8 9 11)) 4 '()) '() )
-;(addx (genome 6 5 '()) 2 '(((1) 1)) f)
-;(addx (genome 6 5 '()) 2 '(((1) 1) ((2) 2)) f)
-;(define (fitness genome L2)0)
-;(addition '((7 8 11) 1) )
-(fitness-x (transform '(1 2 3 5 7 7 8) (genome 7 4 '()) '()) (/ 33 4.))
-;(population 500 0  4 '() '(1 2 3 5 7 7 8))
+;(genome '(1 2 4 5 6 7 8) '() 4)
 
+(car(population  20 0 4 '(1 2 4 5 6 7 8)))
 
 
   
