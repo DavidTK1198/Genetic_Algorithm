@@ -47,6 +47,11 @@
 
 (define (delete L)
     (filter(lambda (x) (> (last x) -1))L))
+
+(define (print L)
+  (display (transform (cadr L)  (car L) '() )))
+
+
 ;------------------------------------------------------------------------------------
 
 (define (genome L L2 k)
@@ -74,14 +79,39 @@
       (append L (list (fitness-x (transform (cadr L)  (car L) '() ) (/ (apply + (car L)) (caddr L)))))
       ))
 
+  
+   (define (mutation L size k)
+     (if (empty? L)
+         L
+     (if (not (= (length L) size))
+         (cons (car L) (mutation (cdr L) size k))
+        (cons (random 1 (+ k  1)) (cdr L)))))
+         
+                  
+(define (crossover-x L1 L2  size count)
+     (if (not (= count size))
+    (cons (list (mutation (cons (caar L2)(cdr (car L1))) (random 1 (+ (length L1)  1))
+             (third L1)) (cadr L1) (third L1))
+           (crossover-x L1 L2 size (+ count 1)))
+    '()))
 
-      
-;(genome '(1 2 4 5 6 7 8) '() 4)
-
+     (define (crossover L size)
+       (crossover-x (car L) (cadr L) size 0))  
+     
 (define (select-pair population)
   (delete (sort (map fitness population) low_fitness)))
 
-(select-pair (population  30 0 4 '(1 2 4 5 6 7 8)))
+;(select-pair (crossover (select-pair (population  30 0 4 '(1 2 4 5 6 7 8))) 20))
+
+
+ (define (resolver-x  population)
+  (display (car (select-pair population)))
+    (newline)
+   (display (car(select-pair (crossover (select-pair population) 30 )))
+   ))
+
+(resolver-x (population  30 0 4 '(1 2 4 5 6 7 8)))
+
 
 
   
