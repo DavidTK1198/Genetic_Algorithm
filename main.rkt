@@ -96,7 +96,11 @@
     '()))
 
      (define (crossover L size)
-       (crossover-x (car L) (cadr L) size 0))  
+ (append (crossover-x (car L) (cadr L) (- size 2) 0)
+         (list(remove (last (car L)) (car L)))
+         (list(remove (last (cadr L)) (cadr L)))))
+
+         
      
 (define (select-pair population)
   (delete (sort (map fitness population) low_fitness)))
@@ -107,10 +111,10 @@
  (define (resolver-x  population)
   (display (car (select-pair population)))
     (newline)
-   (display (car(select-pair (crossover (select-pair population) 30 )))
+   (display (car(select-pair (crossover (select-pair population) 500 )))
    ))
 
-(resolver-x (population  30 0 4 '(1 2 4 5 6 7 8)))
+(resolver-x (population  500 0 4 '(1 2 4 5 6 7 8)))
 
 
 
